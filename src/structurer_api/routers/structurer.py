@@ -128,9 +128,7 @@ async def structure_text_with_template_and_infer(
     Returns:
         StructureTextRes: substrings marking to beginning of each segment, divided into sections asked for and sections inferred
     """
-    chat_gpt_4 = ChatOpenAI(
-        temperature=0, model="gpt-4-1106-preview", openai_api_key=req.api_key
-    )
+    chat_gpt_4 = ChatOpenAI(temperature=0, model="gpt-4", openai_api_key=req.api_key)
     segment_text_structured_gpt4_template_and_infer = LLMChain(
         llm=chat_gpt_4, prompt=prompt_list.segment_text_structured_template_and_infer
     )

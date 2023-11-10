@@ -13,6 +13,7 @@ dependencies = [
     "langchain>=0.0.27",
     "openai>=1.2.1",
     "python-multipart>=0.0.6",
+    "gunicorn>=21.2.0",
 ]
 readme = "README.md"
 requires-python = ">= 3.8"
@@ -30,3 +31,4 @@ allow-direct-references = true
 
 [tool.rye.scripts]
 start = "uvicorn src.structurer_api.main:app --reload"
+prod = "gunicorn src.structurer_api.main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:80"
