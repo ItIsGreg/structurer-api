@@ -31,4 +31,4 @@ allow-direct-references = true
 
 [tool.rye.scripts]
 start = "uvicorn src.structurer_api.main:app --reload"
-prod = "gunicorn src.structurer_api.main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8080"
+prod = "gunicorn src.structurer_api.main:app --workers 1 --worker-class uvicorn.workers.UvicornWorker --bind 0.0.0.0:8080 --timeout 120"
