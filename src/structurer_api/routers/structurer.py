@@ -1,3 +1,4 @@
+import json
 from fastapi import APIRouter
 from pydantic import BaseModel
 from typing import Dict
@@ -128,18 +129,30 @@ async def structure_text_with_template_and_infer(
     Returns:
         StructureTextRes: substrings marking to beginning of each segment, divided into sections asked for and sections inferred
     """
-    chat_gpt_4 = ChatOpenAI(temperature=0, model="gpt-4", openai_api_key=req.api_key)
+    chat_gpt_4 = ChatOpenAI(
+        temperature=0, model="gpt-4-1106-preview", openai_api_key=req.api_key
+    )
     segment_text_structured_gpt4_template_and_infer = LLMChain(
         llm=chat_gpt_4, prompt=prompt_list.segment_text_structured_template_and_infer
     )
     result_structured = segment_text_structured_gpt4_template_and_infer(
         {"input": req.text, "sections": req.sections_to_look_for}
     )
-    result_structured_list = ast.literal_eval(result_structured["text"])
+
+    # handle json prefix from gpt-4-turbo
+    if result_structured["text"].startswith("```json\n"):
+        result_structured["text"] = result_structured["text"][8:]
+        # remove end backticks
+        result_structured["text"] = result_structured["text"][:-4]
+
+    # result_structured_list = ast.literal_eval(result_structured["text"])
+    result_structured_list = json.loads(result_structured["text"])
 
     return StructureTextWithTemplateInferRes(
         sections_asked_for=result_structured_list["sections_asked_for"],
         sections_inferred=result_structured_list["sections_inferred"],
+        # sections_asked_for={"puss": ["puss"]},
+        # sections_inferred={"puss": ["puss"]},
         text=result_structured["text"],
     )
 
