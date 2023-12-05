@@ -241,7 +241,7 @@ async def bundleOutlineV3(
     )
 
 
-@router.post("/bundleOutlineUnmatched")
+@router.post("/bundleOutlineUnmatched/")
 async def bundleOutlineUnmatched(
     req: BundleOutLineUnmatchedReq, gptModel: str = "gpt-3.5-turbo"
 ) -> BundleOutLineUnmatchedRes:
