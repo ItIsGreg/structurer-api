@@ -1,66 +1,24 @@
 import json
 from fastapi import APIRouter
-from pydantic import BaseModel
-from typing import Dict
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
+from structurer_api.utils.Models import (
+    BundleOutLineUnmatchedReq,
+    BundleOutLineUnmatchedRes,
+    BundleOutlineV2Req,
+    BundleOutlineV2Res,
+    BundleOutlineWithAttributesReq,
+    BundleOutlineWithAttributesRes,
+    StructureTextReq,
+    StructureTextRes,
+    StructureTextWithTemplateInferRes,
+    StructureTextWithTemplateReq,
+    StructureTextWithTemplateRes,
+)
 from structurer_api.utils.prompts import Prompt_List
-import ast
-
 from structurer_api.utils.utils import handle_json_prefix
 
 router = APIRouter()
-
-
-# kind of deprecate these responses, need uniform string output
-class StructureTextRes(BaseModel):
-    substrings: list[str]
-    text: str
-
-
-class StructureTextWithTemplateRes(BaseModel):
-    sections_asked_for: Dict[str, list[str]]
-    text: str
-
-
-class StructureTextWithTemplateInferRes(BaseModel):
-    sections_asked_for: Dict[str, list[str]]
-    sections_inferred: Dict[str, list[str]]
-    text: str
-
-
-class BundleOutlineV2Res(BaseModel):
-    outline: Dict[str, list[str]]
-    text: str
-
-
-class StructureTextReq(BaseModel):
-    text: str
-    api_key: str
-
-
-class StructureTextWithTemplateReq(BaseModel):
-    text: str
-    api_key: str
-    sections_to_look_for: list[str]
-
-
-class BundleOutlineV2Req(BaseModel):
-    text: str
-    api_key: str
-    focus_resources: list[str]
-
-
-class BundleOutLineUnmatchedReq(BaseModel):
-    text: str
-    api_key: str
-    entities: Dict[str, list[Dict[str, str]]]
-
-
-class BundleOutLineUnmatchedRes(BaseModel):
-    entities: Dict[str, list[Dict[str, str]]]
-    responseText: str
-
 
 prompt_list = Prompt_List()
 
@@ -237,6 +195,33 @@ async def bundleOutlineV3(
     result_structured = handle_json_prefix(result_structured)
     result_structured_list = json.loads(result_structured["text"])
     return BundleOutlineV2Res(
+        outline=result_structured_list, text=result_structured["text"]
+    )
+
+
+@router.post("/bundleOutlineWithAttributes/")
+async def bundleOutlineWithAttributes(
+    req: BundleOutlineWithAttributesReq, gptModel: str = "gpt-3.5-turbo"
+) -> BundleOutlineWithAttributesRes:
+    """
+    Takes a medical text and a list of fhir-resource types together with attributes.
+    Makes LLM call to label entities in the text according to resource types and extract attributes.
+    Args:
+        req (BundleOutlineWithAttributesReq): text to be structured, OpenAi API key to be used and resource types to look for, with attributes to extract
+    Returns:
+        BundleOutlineWithAttributesRes: Dict with of resource types with list of dict of substrings representing the identified entities and dict of extracted attributes
+    """
+    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    bundle_outline_with_attributes = LLMChain(
+        llm=chat, prompt=prompt_list.bundle_outline_with_attributes
+    )
+    result_structured = bundle_outline_with_attributes(
+        {"medical_text": req.text, "focus_resources": req.focus_resources}
+    )
+    # handle json prefix from gpt-4-turbo
+    result_structured = handle_json_prefix(result_structured)
+    result_structured_list = json.loads(result_structured["text"])
+    return BundleOutlineWithAttributesRes(
         outline=result_structured_list, text=result_structured["text"]
     )
 

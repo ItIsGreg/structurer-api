@@ -235,6 +235,51 @@ class Template_List:
     }}
     Stellen Sie sicher, dass die Ausgabe rein ohne weitere Erklärung bleibt.
 """
+        self.bundle_outline_with_attributes = """
+        You are an assistant to a researcher creating FHIR-Data. You will be provided with a medical text. The task for you and the researcher is to create a bundle of FHIR-resources,
+        representing the content of the text. As a first step to creating these resources, your task is to create an outline of this bundle. The output should have the following form:
+
+        {{
+            "ResourceType1": {{
+                "Concept1": {{
+                    "Attribute1": "Value1",
+                    "Attribute2": "Value2"
+                }},
+                "Concept2": {{
+                    "Attribute3": "Value3",
+                    "Attribute4": "Value4"
+                }},
+            }},
+            "ResourceType2": {{
+                "Concept3": {{
+                    "Attribute5": "Value5",
+                    "Attribute6": "Value6"
+                }},
+            }}
+        }}
+        
+        Make sure to keep the output pure without further explanation.
+        Try to capture as many concepts as possible in resource form.
+
+        OUTPUT Example:
+
+        {{
+            "Condition": {{
+                "Diabetes": {{
+                    "ClinicalStatus": "Active",
+                    "VerificationStatus": "Confirmed"
+                }},
+            }},
+        }}
+
+        If possible try to extract resources specified in the focus resources and try to fill out the attributes to look for as well. If there is no concept corresponding to a requested focus resource, Leave it out.
+        If there are concepts not corresponding to a requested focus resource, leave them out.
+        %FOCUS RESOURCES
+        {focus_resources}
+
+        %MEDICAL TEXT:
+        {medical_text}
+        """
 
 
 class Prompt_List:
@@ -247,6 +292,10 @@ class Prompt_List:
         self.bundle_outline_v3 = PromptTemplate(
             input_variables=["medical_text", "focus_resources"],
             template=template_list.bundle_outline_v3,
+        )
+        self.bundle_outline_with_attributes = PromptTemplate(
+            input_variables=["medical_text", "focus_resources"],
+            template=template_list.bundle_outline_with_attributes,
         )
         self.build_resource_v3 = PromptTemplate(
             input_variables=["medical_term", "context", "resource_type"],
