@@ -17,11 +17,12 @@ class Template_List:
             ]
         }}
         
+        Make sure to keep the output pure without further explanation.
         Make sure only to use resource types from the FHIR R4 specification.
         Try to capture as many concepts as possible in resource form.
 
         If possible try to extract resources specified in the focus resources. If there is no concept corresponding to a requested focus resource, Leave it out.
-        Still include concepts and resource types that are not listed in the focus resources, if they are in the FHIR R4 specification.
+        If there are concepts not corresponding to a requested focus resource, leave them out.
         %FOCUS RESOURCES
         {focus_resources}
 
@@ -56,6 +57,8 @@ class Template_List:
             ]
         }}
 
+        Make sure to keep the output pure without further explanation.
+
         %ENTITIES:
         {entities}
 
@@ -77,6 +80,8 @@ class Template_List:
                 "Substring3",
             ]
         }}
+
+        Make sure to keep the output pure without further explanation.
 
         %ENTITIES:
         {entities}
@@ -175,6 +180,8 @@ class Template_List:
         "section_1": [substring_1, substring_2],
         "section_2": [substring_1, substring_2],
     }}
+    Make sure to keep the output pure without further explanation.
+
     """
         self.segment_text_structured_template_and_infer = """
     Please identify the sections specified further down in the text provided further down.
@@ -200,6 +207,8 @@ class Template_List:
             "section_4": [substring_1, substring_2]
         }}
     }}
+    Make sure to keep the output pure without further explanation.
+
     """
         self.segment_text_structured_template_and_infer_german = """
     Bitte identifizieren Sie die weiter unten angegebenen Abschnitte im ebenfalls weiter unten angegebenen Text.
@@ -224,6 +233,7 @@ class Template_List:
             "section_4": [substring_1, substring_2]
         }}
     }}
+    Stellen Sie sicher, dass die Ausgabe rein ohne weitere Erklärung bleibt.
 """
 
 
