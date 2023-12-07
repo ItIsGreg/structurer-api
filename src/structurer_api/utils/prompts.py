@@ -237,21 +237,25 @@ class Template_List:
 """
         self.bundle_outline_with_attributes = """
         You are an assistant to a researcher creating FHIR-Data. You will be provided with a medical text. The task for you and the researcher is to create a bundle of FHIR-resources,
-        representing the content of the text. As a first step to creating these resources, your task is to create an outline of this bundle. The output should have the following form:
+        representing the content of the text. As a first step to creating these resources, your task is to create an outline of this bundle.
+        The outline is a dictionary of dictionaries of dictionaries. The first level of the dictionary is the resource type. The resource types to look for are specified further down.
+        The second level of the dictionary is the concept. The concepts to look for are specified further down. In the output, the concepts should not be paraphrased, but the exact substring should be returned.
+        The third level of the dictionary comprises of attributes of the concept. The attributes to look for are specified further down.
+        The output should have the following form:
 
         {{
             "ResourceType1": {{
-                "Concept1": {{
+                "Substring_Concept1": {{
                     "Attribute1": "Value1",
                     "Attribute2": "Value2"
                 }},
-                "Concept2": {{
+                "Substring_Concept2": {{
                     "Attribute3": "Value3",
                     "Attribute4": "Value4"
                 }},
             }},
             "ResourceType2": {{
-                "Concept3": {{
+                "Substring_Concept3": {{
                     "Attribute5": "Value5",
                     "Attribute6": "Value6"
                 }},

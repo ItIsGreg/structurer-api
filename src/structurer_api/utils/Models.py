@@ -47,7 +47,7 @@ class BundleOutlineV2Req(BaseModel):
 
 
 class FocusResourceWithAttributes(BaseModel):
-    resource: str
+    resource_type: str
     attributes: list[str]
 
 
