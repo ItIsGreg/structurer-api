@@ -65,6 +65,80 @@ class Template_List:
         %TEXT:
         {medical_text}
 """
+        self.bundle_outline_unmatched_with_attributes = """
+        You will be provided with a medical text. Furthermore, you will be provided with a input data structure, looking like this:
+
+        {{
+            "Entity1": [
+                {{"ParaphrasedConcept1": ""
+                    "attributes": {{
+                        "attribute1": "value1",
+                        "attribute2": "value2"
+                    }}
+                    }}
+                }},
+                {{"ParaphrasedConcept2": ""
+                    "attributes": {{
+                        "attribute3": "value3",
+                        "attribute4": "value4"
+                    }}
+                    }}
+                }}
+            ],
+            "Entity2": [
+                {{"ParaphrasedConcept3": ""
+                    "attributes": {{
+                        "attribute5": "value5",
+                        "attribute6": "value6"
+                    }}
+                    }}
+                }},
+            ]
+        }}
+
+        Your task is to identify the paraphrased concepts in the text and find the corresponding substring. The exact substring should be found.
+        The attributes should normally be ok, but if you find a mistake, please correct it.
+
+        The output should have the following form:
+
+        {{
+            "Entity1": [
+                {{"ParaphrasedConcept1": "ExactSubstring1"
+                    "attributes": {{
+                        "attribute1": "value1",
+                        "attribute2": "value2"
+                    }}
+                    }}
+                }},
+                {{"ParaphrasedConcept2": "ExactSubstring2"
+                    "attributes": {{
+                        "attribute3": "value3",
+                        "attribute4": "value4"
+                    }}
+                    }}
+                }}
+                }},
+            ],
+            "Entity2": [
+                {{"ParaphrasedConcept3": "ExactSubstring3"
+                    "attributes": {{
+                        "attribute5": "value5",
+                        "attribute6": "value6"
+                    }}
+                    }}
+                }},
+                }},
+            ]
+        }}
+
+        Make sure to keep the output pure without further explanation.
+
+        %ENTITIES:
+        {entities}
+
+        %TEXT:
+        {medical_text}
+"""
         self.bundle_outline_v3 = """
         You will be provided with a medical text. Furthermore, you will be provided with a list of entities.
         Your task is to identify instances of the entities in the text and return the corresponding substring from the text. The exact substring should be returned, without paraphrasing.
@@ -338,4 +412,8 @@ class Prompt_List:
         self.bundle_outline_unmatched = PromptTemplate(
             input_variables=["medical_text", "entities"],
             template=template_list.bundle_outline_unmatched,
+        )
+        self.bundle_outline_unmatched_with_attributes = PromptTemplate(
+            input_variables=["medical_text", "entities"],
+            template=template_list.bundle_outline_unmatched_with_attributes,
         )

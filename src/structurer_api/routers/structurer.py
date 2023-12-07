@@ -1,3 +1,4 @@
+from html import entities
 import json
 from fastapi import APIRouter
 from langchain.chains import LLMChain
@@ -5,6 +6,8 @@ from langchain.chat_models import ChatOpenAI
 from structurer_api.utils.Models import (
     BundleOutLineUnmatchedReq,
     BundleOutLineUnmatchedRes,
+    BundleOutlineUnmatchedWithAttributesReq,
+    BundleOutlineUnmatchedWithAttributesRes,
     BundleOutlineV2Req,
     BundleOutlineV2Res,
     BundleOutlineWithAttributesReq,
@@ -249,5 +252,35 @@ async def bundleOutlineUnmatched(
     result_structured = handle_json_prefix(result_structured)
     result_structured_list = json.loads(result_structured["text"])
     return BundleOutLineUnmatchedRes(
+        entities=result_structured_list, responseText=result_structured["text"]
+    )
+
+
+@router.post("/bundleOutlineUnmatchedWithAttributes/")
+async def bundleOutlineUnmatchedWithAttributes(
+    req: BundleOutlineUnmatchedWithAttributesReq, gptModel: str = "gpt-3.5-turbo"
+) -> BundleOutlineUnmatchedWithAttributesRes:
+    """
+    Takes a medical text and a dict of entities with instances of these entities that are paraphrased.
+    Makes LLM call to identify exact substring for the paraphrased concepts.
+    Args:
+        req (BundleOutlineUnmatchedWithAttributesReq): text to be structured, OpenAi API key to be used and paraphrased entities to find the exact substring for, with attributes already extracted
+    Returns:
+        BundleOutlineUnmatchedWithAttributesRes: Dict of resource types, with list of dict of substrings representing the identified concepts and dict of extracted attributes
+    """
+    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    bundle_outline_unmatched_with_attributes = LLMChain(
+        llm=chat, prompt=prompt_list.bundle_outline_unmatched_with_attributes
+    )
+    result_structured = bundle_outline_unmatched_with_attributes(
+        {
+            "medical_text": req.text,
+            "entities": req.entities,
+        }
+    )
+    # handle json prefix from gpt-4-turbo
+    result_structured = handle_json_prefix(result_structured)
+    result_structured_list = json.loads(result_structured["text"])
+    return BundleOutlineUnmatchedWithAttributesRes(
         entities=result_structured_list, responseText=result_structured["text"]
     )

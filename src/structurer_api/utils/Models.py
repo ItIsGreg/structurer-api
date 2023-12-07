@@ -63,6 +63,19 @@ class BundleOutLineUnmatchedReq(BaseModel):
     entities: Dict[str, list[Dict[str, str]]]
 
 
+class BundleOutlineUnmatchedWithAttributesReq(BaseModel):
+    entities: Dict[str, list[Dict[str, str | Dict[str, str]]]]
+    # Dict[resource_type, list[Dict[paraphrased concept, empty concept substring | Dict[attribute, attribute value]]]]
+    text: str
+    api_key: str
+
+
 class BundleOutLineUnmatchedRes(BaseModel):
     entities: Dict[str, list[Dict[str, str]]]
+    responseText: str
+
+
+class BundleOutlineUnmatchedWithAttributesRes(BaseModel):
+    entities: Dict[str, list[Dict[str, str | Dict[str, str]]]]
+    # Dict[resource_type, list[Dict[paraphrased concept, concept substring | Dict[attribute, attribute value]]]]
     responseText: str
