@@ -283,6 +283,32 @@ class Template_List:
     }}
     Make sure to keep the output pure without further explanation.
 
+    Avoid overlapping sections.
+    If necessary, choose shorter substrings, e.g. if a section is only one sentence long, choose a substring that marks the beginning of the sentence and a substring that marks the end of the sentence.
+
+    E.g. for the following text:
+    
+    Chief Complaint:
+    renal mass
+ 
+    Major Surgical or Invasive Procedure:
+    right laparascopic radical nephrectomy- Dr. ___, Dr. 
+    ___ ___
+
+    The output with substrings for the sections should look like this:
+
+    {{
+        "sections_asked_for": {{
+            "Chief Complaint": ["Chief Complaint:", "renal mass"],
+            "Major Surgical or Invasive Procedure": ["Major Surgical or Invasive Procedure:", "___ ___"]
+        }},
+        "sections_inferred": {{
+        }}
+    }}
+    """
+        self.segment_text_structured_template_and_infer_german = """
+
+
     """
         self.segment_text_structured_template_and_infer_german = """
     Bitte identifizieren Sie die weiter unten angegebenen Abschnitte im ebenfalls weiter unten angegebenen Text.
