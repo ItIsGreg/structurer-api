@@ -3,7 +3,7 @@ import json
 from fastapi import APIRouter
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
-from structurer_api.utils.Models import (
+from structurer_api.utils.structurer_models import (
     BundleOutLineUnmatchedReq,
     BundleOutLineUnmatchedRes,
     BundleOutlineUnmatchedWithAttributesReq,
@@ -20,10 +20,16 @@ from structurer_api.utils.Models import (
 )
 from structurer_api.utils.prompts import Prompt_List
 from structurer_api.utils.utils import handle_json_prefix
+from pydantic import BaseModel
 
 router = APIRouter()
 
 prompt_list = Prompt_List()
+
+
+class DownloadFileReq(BaseModel):
+    file_name: str
+    bucket_name: str
 
 
 @router.post("/structureText/")
