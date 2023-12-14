@@ -12,6 +12,8 @@ from structurer_api.utils.structurer_models import (
     BundleOutlineV2Res,
     BundleOutlineWithAttributesReq,
     BundleOutlineWithAttributesRes,
+    ExtractAttributesForConceptReq,
+    ExtractAttributesForConceptRes,
     StructureTextReq,
     StructureTextRes,
     StructureTextWithTemplateInferRes,
@@ -289,4 +291,35 @@ async def bundleOutlineUnmatchedWithAttributes(
     result_structured_list = json.loads(result_structured["text"])
     return BundleOutlineUnmatchedWithAttributesRes(
         entities=result_structured_list, responseText=result_structured["text"]
+    )
+
+
+@router.post("/extractAttributesForConcept/")
+async def extractAttributesForConcept(
+    req: ExtractAttributesForConceptReq, model: str = "gpt-3.5-turbo"
+) -> ExtractAttributesForConceptRes:
+    """
+    Takes a medical text and a concept with a list of attributes to extract.
+    Makes LLM call to extract the attributes for the concept.
+    Args:
+        req (ExtractAttributesForConceptReq): text to be structured, OpenAi API key to be used and concept with attributes to extract
+    Returns:
+        ExtractAttributesForConceptRes: Dict of extracted attributes
+    """
+    chat = ChatOpenAI(temperature=0, model=model, openai_api_key=req.api_key)
+    extract_attributes_for_concept = LLMChain(
+        llm=chat, prompt=prompt_list.extract_attributes_for_concept
+    )
+    result_structured = extract_attributes_for_concept(
+        {
+            "text_excerpt": req.text_excerpt,
+            "concept": req.concept,
+            "attributes": req.attributes,
+        }
+    )
+    # handle json prefix from gpt-4-turbo
+    result_structured = handle_json_prefix(result_structured)
+    result_structured_list = json.loads(result_structured["text"])
+    return ExtractAttributesForConceptRes(
+        attributes=result_structured_list, responseText=result_structured["text"]
     )

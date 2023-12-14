@@ -384,6 +384,46 @@ class Template_List:
         %MEDICAL TEXT:
         {medical_text}
         """
+        self.extract_attributes_for_concept = """
+        You are an assistant to a researcher creating FHIR-Data. You will be provided with a Concept and an excerpt from a medical text.
+        Your task is to extract the attributes of the concept from the text. The attributes to look for are specified further down.
+        Furthermore provided a paraphrase for the concept.
+        The output should have the following form:
+            
+            {{
+                "Attribute1": "Value1",
+                "Attribute2": "Value2",
+                "Paraphrase": "Paraphrase"
+            }}
+
+        %CONCEPT:
+        {concept}
+
+        %ATTRIBUTES:
+        {attributes}
+
+        %TEXT_EXCERPT:
+        {text_excerpt}
+
+        Make sure to keep the output pure without further explanation.
+
+        %EXAMPLE:
+        Example_Concept:
+        HCV cirrhosis 
+
+        Example_Text:
+        buse  
+        - HCV cirrhosis, with persistent fever and leukocytosis
+        - Ascites 
+        - Chronic ba
+
+        Example_Output:
+        {{
+            "ClinicalStatus": "Active",
+            "VerificationStatus": "Confirmed",
+            "Paraphrase": "Hepatitis C Cirrhosis"
+        }}
+"""
 
 
 class Prompt_List:
@@ -442,4 +482,8 @@ class Prompt_List:
         self.bundle_outline_unmatched_with_attributes = PromptTemplate(
             input_variables=["medical_text", "entities"],
             template=template_list.bundle_outline_unmatched_with_attributes,
+        )
+        self.extract_attributes_for_concept = PromptTemplate(
+            input_variables=["concept", "attributes", "text_excerpt"],
+            template=template_list.extract_attributes_for_concept,
         )

@@ -79,3 +79,15 @@ class BundleOutlineUnmatchedWithAttributesRes(BaseModel):
     entities: Dict[str, list[Dict[str, str | Dict[str, str]]]]
     # Dict[resource_type, list[Dict[paraphrased concept, concept substring | Dict[attribute, attribute value]]]]
     responseText: str
+
+
+class ExtractAttributesForConceptReq(BaseModel):
+    text_excerpt: str
+    api_key: str
+    concept: str
+    attributes: list[str]
+
+
+class ExtractAttributesForConceptRes(BaseModel):
+    attributes: Dict[str, str]
+    responseText: str
