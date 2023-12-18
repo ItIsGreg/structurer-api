@@ -82,8 +82,8 @@ class BundleOutlineUnmatchedWithAttributesRes(BaseModel):
 
 
 class ExtractAttributesForConceptReq(BaseModel):
-    text_excerpt: str
     api_key: str
+    text_excerpt: str
     concept: str
     attributes: list[str]
 
