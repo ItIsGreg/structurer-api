@@ -1,6 +1,6 @@
 from fastapi import APIRouter, HTTPException, UploadFile
 from pydantic import BaseModel
-from structurer_api.utils.parse_input import extract_pdf_text, extract_scan_text
+from src.structurer_api.utils.parse_input import extract_pdf_text, extract_scan_text
 
 
 router = APIRouter()
