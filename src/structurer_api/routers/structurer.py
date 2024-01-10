@@ -1,4 +1,5 @@
 import json
+import os
 from fastapi import APIRouter
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
@@ -22,6 +23,7 @@ from structurer_api.utils.structurer_models import (
 from structurer_api.utils.prompts import Prompt_List
 from structurer_api.utils.utils import handle_json_prefix
 from pydantic import BaseModel
+from dotenv import load_dotenv
 
 router = APIRouter()
 
@@ -32,6 +34,15 @@ class DownloadFileReq(BaseModel):
     file_name: str
     bucket_name: str
 
+load_dotenv()
+
+default_api_key = os.getenv("DEFAULT_OPENAI_KEY")
+
+def check_for_default_api_key(api_key: str) -> str:
+    if api_key == "default" and default_api_key is not None:
+        return default_api_key
+    else:
+        return api_key
 
 @router.post("/structureText/")
 async def structure_text(
@@ -46,7 +57,8 @@ async def structure_text(
     Returns:
         StructureTextRes: substrings marking to beginning of each segment
     """
-    chat_gpt_4 = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat_gpt_4 = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     segment_text_structured_gpt4 = LLMChain(
         llm=chat_gpt_4, prompt=prompt_list.segment_text_structured
     )
@@ -75,7 +87,8 @@ async def structure_text_with_template(
     Returns:
         StructureTextRes: substrings marking to beginning of each segment
     """
-    chat_gpt_4 = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat_gpt_4 = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     segment_text_structured_gpt4_template = LLMChain(
         llm=chat_gpt_4, prompt=prompt_list.segment_text_structured_template
     )
@@ -105,7 +118,8 @@ async def structure_text_with_template_and_infer(
     Returns:
         StructureTextRes: substrings marking to beginning of each segment, divided into sections asked for and sections inferred
     """
-    chat_gpt_4 = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat_gpt_4 = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     segment_text_structured_gpt4_template_and_infer = LLMChain(
         llm=chat_gpt_4, prompt=prompt_list.segment_text_structured_template_and_infer
     )
@@ -139,7 +153,8 @@ async def structure_text_with_template_and_infer_german(
     Returns:
         StructureTextRes: substrings marking to beginning of each segment, divided into sections asked for and sections inferred
     """
-    chat_gpt_4 = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat_gpt_4 = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     segment_text_structured_gpt4_template_and_infer_german = LLMChain(
         llm=chat_gpt_4,
         prompt=prompt_list.segment_text_structured_template_and_infer_german,
@@ -170,7 +185,8 @@ async def bundleOutlineV2(
     Returns:
         BundleOutlineV2Res: Dict with of resource types with list of substrings representing the identified entities
     """
-    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     bundle_outline_v2_gpt4 = LLMChain(llm=chat, prompt=prompt_list.bundle_outline_v2)
     result_structured = bundle_outline_v2_gpt4(
         {"medical_text": req.text, "focus_resources": req.focus_resources}
@@ -196,7 +212,8 @@ async def bundleOutlineV3(
     Returns:
         BundleOutlineV2Res: Dict with of resource types with list of substrings representing the identified entities
     """
-    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     bundle_outline_v3 = LLMChain(llm=chat, prompt=prompt_list.bundle_outline_v3)
     result_structured = bundle_outline_v3(
         {"medical_text": req.text, "entities": req.focus_resources}
@@ -221,7 +238,8 @@ async def bundleOutlineWithAttributes(
     Returns:
         BundleOutlineWithAttributesRes: Dict with of resource types with list of dict of substrings representing the identified entities and dict of extracted attributes
     """
-    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     bundle_outline_with_attributes = LLMChain(
         llm=chat, prompt=prompt_list.bundle_outline_with_attributes
     )
@@ -248,7 +266,8 @@ async def bundleOutlineUnmatched(
     Returns:
         BundleOutlineV2Res: Dict with of resource types with list of substrings representing the identified concepts
     """
-    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     bundle_outline_unmatched = LLMChain(
         llm=chat, prompt=prompt_list.bundle_outline_unmatched
     )
@@ -275,7 +294,8 @@ async def bundleOutlineUnmatchedWithAttributes(
     Returns:
         BundleOutlineUnmatchedWithAttributesRes: Dict of resource types, with list of dict of substrings representing the identified concepts and dict of extracted attributes
     """
-    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat = ChatOpenAI(temperature=0, model=gptModel, openai_api_key=api_key)
     bundle_outline_unmatched_with_attributes = LLMChain(
         llm=chat, prompt=prompt_list.bundle_outline_unmatched_with_attributes
     )
@@ -305,7 +325,8 @@ async def extractAttributesForConcept(
     Returns:
         ExtractAttributesForConceptRes: Dict of extracted attributes
     """
-    chat = ChatOpenAI(temperature=0, model=model, openai_api_key=req.api_key)
+    api_key = check_for_default_api_key(req.api_key)
+    chat = ChatOpenAI(temperature=0, model=model, openai_api_key=api_key)
     extract_attributes_for_concept = LLMChain(
         llm=chat, prompt=prompt_list.extract_attributes_for_concept
     )
