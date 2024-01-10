@@ -1,6 +1,7 @@
 from fastapi import APIRouter, FastAPI
-from src.structurer_api.routers import structurer
-from src.structurer_api.routers import parse_input
+from structurer_api.routers import structurer
+from structurer_api.routers import parse_input
+from structurer_api.routers import example
 
 # from structurer_api.routers import codeSystems
 from starlette.middleware.cors import CORSMiddleware
@@ -18,6 +19,11 @@ router.include_router(
     parse_input.router,
     prefix="/parse_input",
     tags=["parse_input"],
+)
+router.include_router(
+    example.router,
+    prefix="/example",
+    tags=["example"],
 )
 # router.include_router(
 #     codeSystems.router,

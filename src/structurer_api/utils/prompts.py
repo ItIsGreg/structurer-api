@@ -18,7 +18,7 @@ class Template_List:
         }}
         
         Make sure to keep the output pure without further explanation.
-        Make sure only to use resource types from the FHIR R4 specification.
+        Make sure only to use resource types from the FHIR R4 specification. However do not change the resource type names, e.g. do not use MedicationRequest instead of Medication.
         Try to capture as many concepts as possible in resource form.
 
         If possible try to extract resources specified in the focus resources. If there is no concept corresponding to a requested focus resource, Leave it out.

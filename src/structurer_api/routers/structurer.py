@@ -1,9 +1,8 @@
-from html import entities
 import json
 from fastapi import APIRouter
 from langchain.chains import LLMChain
 from langchain.chat_models import ChatOpenAI
-from src.structurer_api.utils.structurer_models import (
+from structurer_api.utils.structurer_models import (
     BundleOutLineUnmatchedReq,
     BundleOutLineUnmatchedRes,
     BundleOutlineUnmatchedWithAttributesReq,
@@ -20,8 +19,8 @@ from src.structurer_api.utils.structurer_models import (
     StructureTextWithTemplateReq,
     StructureTextWithTemplateRes,
 )
-from src.structurer_api.utils.prompts import Prompt_List
-from src.structurer_api.utils.utils import handle_json_prefix
+from structurer_api.utils.prompts import Prompt_List
+from structurer_api.utils.utils import handle_json_prefix
 from pydantic import BaseModel
 
 router = APIRouter()
