@@ -1,0 +1,11 @@
+services:
+  structurer-api:
+    container_name: structurer-api
+    image: structurer-api
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    env_file:
+      - ./.env
