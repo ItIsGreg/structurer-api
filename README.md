@@ -6,4 +6,4 @@ You can start it with
 
 `docker compose up`
 
-The API should then be accessible from [localhost:8000](locahost:8000)
+The API should then be accessible from [localhost:8000](http://locahost:8000)
