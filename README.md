@@ -1,6 +1,6 @@
 # structurer-api
 
-The structurer-api is the backend to the structurer.
+The structurer-api is the backend to the [structurer](https://github.com/ItIsGreg/structurer).
 
 You can start it with
 
